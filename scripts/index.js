@@ -16,11 +16,12 @@ const del = function(evt) {
     evt.target.closest('.card').remove();
 }
 
-function addCard(link, name, callback) {
+function createCard(link, name, deleteButtonCallback) {
     const card = cardTemplate.querySelector('.card').cloneNode(true);
     card.querySelector('.card__image').src= link;
     card.querySelector('.card__title').innerText = name;
-    card.querySelector('.card__delete-button').addEventListener('click', callback);
+    card.querySelector('.card__image').alt = name;
+    card.querySelector('.card__delete-button').addEventListener('click', deleteButtonCallback);
     return card;
 }
 
@@ -35,5 +36,5 @@ function addCard(link, name, callback) {
 
 //  forEach принимает в качестве параметра фцию-колбэк, параметр которой определяет, как мы будем обращаться к каждому отдельному элементу массива
 initialCards.forEach(function(item) {
-    placesList.append(addCard(item.link, item.name, del));
+    placesList.append(createCard(item.link, item.name, del));
 });
