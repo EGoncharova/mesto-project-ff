@@ -7,21 +7,21 @@ const escClose = function(event) {
         closeModal(document.querySelector('.popup_is-opened'));
     }
 }
+
+const closeOverlay = function(event, element) {
+    event.stopPropagation();
+    if (event.target.classList.contains('popup')) {
+        closeModal(element);
+    }
+}
 const openModal = function(element) {
-    element.classList.add('popup_is-opened', 'popup_is-animated');
-    element.querySelector('.popup__close').addEventListener('click', function(event) {
-        closeModal(event.target.closest('.popup'));
-    });
-    element.addEventListener('click', function(event) {
-        event.stopPropagation();
-        if (event.target.classList.contains('popup')) {
-            closeModal(element);
-        }
-    });
+    element.classList.add('popup_is-opened');
     document.addEventListener('keydown',escClose);
 }
 
 export {
     closeModal,
+    closeOverlay,
     openModal
 };
+
