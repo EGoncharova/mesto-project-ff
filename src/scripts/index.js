@@ -61,6 +61,15 @@ const placeNameInput = formPlace['place-name'];
 
 const savePlaceButton = formPlace.querySelector('.popup__button');
 
+const validationConfig = {
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inactiveButtonClass: 'popup__button_disabled',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__error_visible'
+  };
+
 const showImage = function(event) {
     popupImagePicture.src = event.target.src;
     popupImagePicture.alt =  event.target.closest('.card').querySelector('.card__title').textContent ;
@@ -80,7 +89,7 @@ getPageData()
         profileImage.style.backgroundImage = `url(${userData.avatar})`;
         userID = userData._id;
         cardsData.forEach(function(item) {
-            placesList.append(createCard(item, handlecardDelete, like, showImage, userID));
+            placesList.append(createCard(item, handleCardDelete, like, showImage, userID));
         });
     })
     .catch((err)=>{
@@ -99,7 +108,7 @@ enableValidation({
 
 // Обработчик «отправки» формы, хотя пока
 // она никуда отправляться не будет
-function handleformEditProfileSubmit(evt) {
+function handleFormEditProfileSubmit(evt) {
     evt.preventDefault(); // Эта строчка отменяет стандартную отправку формы.                            
     saveProfileButton.textContent = "Сохранение...";
     editUser(nameInput.value, jobInput.value)
@@ -125,7 +134,7 @@ function handlePlaceSubmit(evt) {
     addCard({name: placeNameInput.value, link: linkInput.value})
     .then ((cardsData) => {
         console.log(cardsData);
-        placesList.prepend(createCard(cardsData, handlecardDelete, like, showImage, userID));
+        placesList.prepend(createCard(cardsData, handleCardDelete, like, showImage, userID));
         formPlace.reset();
         closeModal(popupAdd);
     })
@@ -140,7 +149,7 @@ function handlePlaceSubmit(evt) {
 
 let handleConfirm  = () => {};
 
-function  handlecardDelete(cardId, cardObj) {
+function  handleCardDelete(cardId, cardObj) {
      handleConfirm = () => {
         deleteImageCard(cardId)
         .then ((cardsData) => {
@@ -174,16 +183,10 @@ function handleAvatarSubmit() {
 
 // Прикрепляем обработчик к форме:
 // он будет следить за событием “submit” - «отправка»
-formEditProfile.addEventListener('submit', handleformEditProfileSubmit);
+formEditProfile.addEventListener('submit', handleFormEditProfileSubmit);
 
 profileEditButton.addEventListener('click', function() {
-    clearValidation  (formEditProfile,{
-        inputSelector: '.popup__input',
-        submitButtonSelector: '.popup__button',
-        inactiveButtonClass: 'popup__button_disabled',
-        inputErrorClass: 'popup__input_type_error',
-        errorClass: 'popup__error_visible'
-      });
+    clearValidation  (formEditProfile,validationConfig);
     nameInput.value = profileTitle.textContent;
     jobInput.value = profileDescription.textContent;
     openModal(popupEdit);
@@ -192,18 +195,14 @@ profileEditButton.addEventListener('click', function() {
 
 profileAddButton.addEventListener('click', function() {
     formPlace.reset();
-    clearValidation  (formPlace,{
-        inputSelector: '.popup__input',
-        submitButtonSelector: '.popup__button',
-        inactiveButtonClass: 'popup__button_disabled',
-        inputErrorClass: 'popup__input_type_error',
-        errorClass: 'popup__error_visible'
-      });
+    clearValidation  (formPlace,validationConfig);
     openModal(popupAdd);
 });
 
 profileImage.addEventListener('click', function() {
     formEditAvatar.reset();
+    formEditAvatar.querySelector('.popup__button').disabled = true;
+    formEditAvatar.querySelector('.popup__button').classList.add('popup__button_disabled');
     openModal(popupEditAvatar);
 });
 

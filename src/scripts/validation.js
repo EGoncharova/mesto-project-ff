@@ -69,18 +69,21 @@ const enableValidation = function({
   }; 
 
     
-    const clearValidation = (formElement,{
-        inputSelector,
-        submitButtonSelector,
-        inactiveButtonClass,
-        inputErrorClass,
-        errorClass
-      }) => {
+const clearValidation = (formElement, {
+    formSelector,
+    inputSelector,
+    submitButtonSelector,
+    inactiveButtonClass,
+    inputErrorClass,
+    errorClass
+    }) => {
+        formElement.querySelector(submitButtonSelector).disabled = true;   
+        formElement.querySelector(submitButtonSelector).classList.add(inactiveButtonClass);
         const inputList = Array.from(formElement.querySelectorAll(inputSelector));
         inputList.forEach((inputElement) => {
             hideInputError(formElement, inputElement, inputErrorClass, errorClass);
         })
-      }
+    }
 
   export {
     enableValidation,
